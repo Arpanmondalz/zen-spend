@@ -1,0 +1,832 @@
+/* ===== CSS Variables ===== */
+:root {
+    --bg-dark: #0a1628;
+    --bg-teal: #134e5e;
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --need-color: #7fb069;
+    --want-color: #e07a5f;
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --text-muted: rgba(255, 255, 255, 0.5);
+    --danger: #e74c3c;
+    --transition: all 0.3s ease;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-teal) 100%);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ===== Breathing Background ===== */
+.breathing-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at 30% 20%, rgba(19, 78, 94, 0.4) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(127, 176, 105, 0.2) 0%, transparent 50%);
+    animation: breathe 4s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes breathe {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.02); }
+}
+
+/* ===== App Container ===== */
+.app-container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 1rem;
+    padding-bottom: 5rem;
+}
+
+/* ===== Glass Effect ===== */
+.glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: var(--glass-shadow);
+}
+
+/* ===== Header ===== */
+.header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+.mascot-container {
+    position: relative;
+}
+
+.mascot {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    animation: mascotBreathe 4s ease-in-out infinite;
+    transition: var(--transition);
+}
+
+@keyframes mascotBreathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.header-text h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+}
+
+.tagline {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.settings-btn {
+    margin-left: auto;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    opacity: 0.8;
+    transition: var(--transition);
+}
+
+.settings-btn:hover {
+    opacity: 1;
+    transform: rotate(90deg);
+}
+
+/* ===== Dashboard Cards ===== */
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.card {
+    padding: 1.25rem;
+    transition: var(--transition);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.card-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.card-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+.card-value.small {
+    font-size: 1.5rem;
+}
+
+.card-sublabel {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+.card-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.small-card {
+    text-align: center;
+}
+
+.safe-spend-card {
+    text-align: center;
+    border: 1px solid var(--need-color);
+}
+
+.safe-spend-card .card-value {
+    color: var(--need-color);
+}
+
+.safe-spend-card.warning .card-value {
+    color: var(--want-color);
+}
+
+/* ===== Budget Progress ===== */
+.budget-card {
+    padding: 1rem 1.25rem;
+}
+
+.budget-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+}
+
+.progress-bar {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--need-color), var(--want-color));
+    border-radius: 4px;
+    transition: width 0.5s ease;
+    width: 0%;
+}
+
+/* ===== FAB ===== */
+.fab {
+    position: fixed;
+    bottom: 5rem;
+    right: 1.5rem;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--need-color), var(--bg-teal));
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(127, 176, 105, 0.4);
+    transition: var(--transition);
+    z-index: 100;
+}
+
+.fab:hover {
+    transform: scale(1.1) rotate(90deg);
+}
+
+.fab:active {
+    transform: scale(0.95);
+}
+
+/* ===== Tab Navigation ===== */
+.tab-nav {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.tab-nav::-webkit-scrollbar {
+    display: none;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.tab-btn.active {
+    background: rgba(127, 176, 105, 0.2);
+    border-color: var(--need-color);
+    color: var(--text-primary);
+}
+
+/* ===== Tab Content ===== */
+.tab-panel {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Expense List ===== */
+.expense-list, .parking-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.expense-item, .parking-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    transition: var(--transition);
+}
+
+.expense-item:hover {
+    transform: translateX(4px);
+}
+
+.expense-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.expense-details {
+    flex: 1;
+}
+
+.expense-category {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.expense-desc {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+}
+
+.expense-meta {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+.expense-amount {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.expense-amount.need {
+    color: var(--need-color);
+}
+
+.expense-amount.want {
+    color: var(--want-color);
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: var(--transition);
+}
+
+.delete-btn:hover {
+    color: var(--danger);
+}
+
+.empty-state {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 2rem;
+}
+
+/* ===== Parking Item Specific ===== */
+.parking-item {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.parking-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+
+.parking-countdown {
+    font-size: 0.875rem;
+    color: var(--want-color);
+}
+
+.parking-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    width: 100%;
+}
+
+.parking-actions .btn {
+    flex: 1;
+    font-size: 0.8rem;
+    padding: 0.5rem;
+}
+
+/* ===== Charts ===== */
+.chart-container {
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.chart-container h3 {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.chart-container canvas {
+    max-height: 200px;
+}
+
+/* ===== Modal ===== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+    padding: 1rem;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal {
+    width: 100%;
+    max-width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 1.5rem;
+    transform: translateY(20px) scale(0.95);
+    transition: var(--transition);
+}
+
+.modal-overlay.active .modal {
+    transform: translateY(0) scale(1);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-header h2 {
+    font-size: 1.25rem;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.75rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    line-height: 1;
+}
+
+.small-modal {
+    max-width: 320px;
+    text-align: center;
+}
+
+.small-modal h3 {
+    margin-bottom: 0.75rem;
+}
+
+/* ===== Form Elements ===== */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--need-color);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.form-group select option {
+    background: var(--bg-dark);
+}
+
+/* ===== Toggle Switch ===== */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+}
+
+.toggle-label {
+    font-weight: 600;
+    min-width: 50px;
+    transition: var(--transition);
+}
+
+.toggle-label.need {
+    color: var(--need-color);
+}
+
+.toggle-label.want {
+    color: var(--want-color);
+}
+
+.toggle {
+    position: relative;
+    width: 60px;
+    height: 32px;
+}
+
+.toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--need-color);
+    border-radius: 32px;
+    transition: var(--transition);
+}
+
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    height: 26px;
+    width: 26px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: var(--transition);
+}
+
+.toggle input:checked + .toggle-slider {
+    background: var(--want-color);
+}
+
+.toggle input:checked + .toggle-slider::before {
+    transform: translateX(28px);
+}
+
+/* ===== Lunch Toast ===== */
+.lunch-toast {
+    background: rgba(224, 122, 95, 0.2);
+    border: 1px solid var(--want-color);
+    border-radius: 10px;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    text-align: center;
+    animation: fadeIn 0.3s ease;
+}
+
+/* ===== Buttons ===== */
+.btn {
+    padding: 0.875rem 1.5rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--need-color), var(--bg-teal));
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(127, 176, 105, 0.4);
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+.btn-primary.want-mode {
+    background: linear-gradient(135deg, var(--want-color), #c45a3b);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border);
+}
+
+.btn-danger {
+    background: rgba(231, 76, 60, 0.2);
+    color: var(--danger);
+    border: 1px solid var(--danger);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.action-buttons .btn {
+    flex: 1;
+}
+
+/* ===== Hold Button Progress Ring ===== */
+.save-btn-container {
+    flex: 1;
+    position: relative;
+}
+
+#saveBtn {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+}
+
+.ring-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.2);
+    stroke-width: 3;
+}
+
+.ring-progress {
+    fill: none;
+    stroke: white;
+    stroke-width: 3;
+    stroke-dasharray: 100.53;
+    stroke-dashoffset: 100.53;
+    stroke-linecap: round;
+    transform: rotate(-90deg);
+    transform-origin: center;
+    transition: stroke-dashoffset 0.1s linear;
+}
+
+#saveBtn.holding .btn-text {
+    opacity: 0;
+}
+
+#saveBtn.holding .progress-ring {
+    display: block;
+}
+
+/* ===== Settings ===== */
+.settings-content .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid var(--glass-border);
+    margin: 1.5rem 0;
+}
+
+.data-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.data-actions h3 {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.import-label {
+    text-align: center;
+}
+
+.encrypt-option {
+    margin-top: 1rem;
+}
+
+.encrypt-option label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+/* ===== Toast Notifications ===== */
+.toast-container {
+    position: fixed;
+    bottom: 6rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.toast {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    padding: 0.875rem 1.25rem;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+    white-space: nowrap;
+}
+
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toastOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-10px); }
+}
+
+/* ===== Utilities ===== */
+.hidden {
+    display: none !important;
+}
+
+/* ===== CPU Modal ===== */
+.cpu-desc {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.cpu-result {
+    background: rgba(127, 176, 105, 0.2);
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.cpu-buttons {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.cpu-buttons .btn {
+    flex: 1;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+}
+
+/* ===== Responsive ===== */
+@media (min-width: 768px) {
+    .app-container {
+        padding: 2rem;
+    }
+    
+    .card-value {
+        font-size: 3rem;
+    }
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 3px;
+}

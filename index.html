@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a1628">
+    <meta name="description" content="ZenSpend - Mindful Expense Tracking">
+    <title>ZenSpend</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="assets/icon-192.png">
+    <link rel="apple-touch-icon" href="assets/icon-192.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Background Breathing Effect -->
+        <div class="breathing-bg"></div>
+        
+        <!-- Header -->
+        <header class="header">
+            <div class="mascot-container">
+                <img src="assets/mascot-zen.png" alt="Buddy" id="mascot" class="mascot">
+            </div>
+            <div class="header-text">
+                <h1>ZenSpend</h1>
+                <p class="tagline">Mindful Money</p>
+            </div>
+            <button class="settings-btn" id="settingsBtn" aria-label="Settings">⚙️</button>
+        </header>
+
+        <!-- Dashboard Cards -->
+        <section class="dashboard">
+            <div class="card glass safe-spend-card">
+                <span class="card-label">Safe to Spend Today</span>
+                <span class="card-value" id="safeToSpend">₹0</span>
+            </div>
+            
+            <div class="card-row">
+                <div class="card glass small-card">
+                    <span class="card-label">Impulse Tax</span>
+                    <span class="card-value small" id="impulseTax">₹0</span>
+                    <span class="card-sublabel">saved in vault</span>
+                </div>
+                <div class="card glass small-card">
+                    <span class="card-label">Runway</span>
+                    <span class="card-value small" id="runway">--</span>
+                    <span class="card-sublabel">budget zero date</span>
+                </div>
+            </div>
+
+            <div class="card glass budget-card">
+                <div class="budget-info">
+                    <span>Budget: ₹<span id="budgetAmount">0</span></span>
+                    <span>Spent: ₹<span id="spentAmount">0</span></span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="budgetProgress"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Add Expense FAB -->
+        <button class="fab" id="addExpenseBtn" aria-label="Add Expense">+</button>
+
+        <!-- Tab Navigation -->
+        <nav class="tab-nav">
+            <button class="tab-btn active" data-tab="expenses">Expenses</button>
+            <button class="tab-btn" data-tab="parking">Parking Lot</button>
+            <button class="tab-btn" data-tab="analytics">Analytics</button>
+        </nav>
+
+        <!-- Tab Content -->
+        <main class="tab-content">
+            <!-- Expenses Tab -->
+            <section class="tab-panel active" id="expenses-panel">
+                <div class="expense-list" id="expenseList">
+                    <p class="empty-state">No expenses yet. Start tracking!</p>
+                </div>
+            </section>
+
+            <!-- Parking Lot Tab -->
+            <section class="tab-panel" id="parking-panel">
+                <div class="parking-list" id="parkingList">
+                    <p class="empty-state">Parked items will appear here.</p>
+                </div>
+            </section>
+
+            <!-- Analytics Tab -->
+            <section class="tab-panel" id="analytics-panel">
+                <div class="chart-container glass">
+                    <h3>Spending by Category</h3>
+                    <canvas id="pieChart"></canvas>
+                </div>
+                <div class="chart-container glass">
+                    <h3>Monthly Trend</h3>
+                    <canvas id="barChart"></canvas>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Expense Modal -->
+    <div class="modal-overlay" id="expenseModal">
+        <div class="modal glass">
+            <div class="modal-header">
+                <h2>Add Expense</h2>
+                <button class="close-btn" id="closeModal">×</button>
+            </div>
+            
+            <form id="expenseForm">
+                <div class="form-group">
+                    <label for="amount">Amount (₹)</label>
+                    <input type="number" id="amount" required min="1" step="0.01" placeholder="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" required>
+                        <option value="">Select...</option>
+                        <option value="Food">🍕 Food</option>
+                        <option value="Travel">🚗 Travel</option>
+                        <option value="Fees/Bills">📄 Fees/Bills</option>
+                        <option value="Home">🏠 Home</option>
+                        <option value="Groceries">🛒 Groceries</option>
+                        <option value="Shopping">🛍️ Shopping</option>
+                        <option value="Gifting">🎁 Gifting</option>
+                        <option value="Entertainment">🎬 Entertainment</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description (Optional)</label>
+                    <input type="text" id="description" placeholder="What's this for?">
+                </div>
+
+                <!-- Need vs Want Toggle -->
+                <div class="toggle-container">
+                    <span class="toggle-label" id="toggleLabel">Need</span>
+                    <label class="toggle">
+                        <input type="checkbox" id="wantToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <!-- Lunch Translator Toast -->
+                <div class="lunch-toast hidden" id="lunchToast"></div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button type="button" class="btn btn-secondary hidden" id="parkBtn">🅿️ Park It</button>
+                    <div class="save-btn-container">
+                        <button type="submit" class="btn btn-primary" id="saveBtn">
+                            <span class="btn-text">Save</span>
+                            <svg class="progress-ring hidden" viewBox="0 0 36 36">
+                                <circle class="ring-bg" cx="18" cy="18" r="16"/>
+                                <circle class="ring-progress" cx="18" cy="18" r="16"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cost Per Use Modal -->
+    <div class="modal-overlay" id="cpuModal">
+        <div class="modal glass small-modal">
+            <h3>How often will you use this?</h3>
+            <p class="cpu-desc">For a ₹<span id="cpuAmount">0</span> purchase:</p>
+            <div class="form-group">
+                <input type="number" id="cpuUses" min="1" value="1" placeholder="Times per year">
+            </div>
+            <p class="cpu-result" id="cpuResult"></p>
+            <div class="cpu-buttons">
+                <button class="btn btn-secondary" id="cpuCancel">Cancel</button>
+                <button class="btn btn-primary" id="cpuConfirm">Got it, Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal glass">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="close-btn" id="closeSettings">×</button>
+            </div>
+            
+            <div class="settings-content">
+                <div class="form-group">
+                    <label for="monthlyBudget">Monthly Budget (₹)</label>
+                    <input type="number" id="monthlyBudget" min="0" step="100" placeholder="Enter budget">
+                    <button class="btn btn-primary" id="saveBudget">Save Budget</button>
+                </div>
+
+                <hr class="divider">
+
+                <div class="data-actions">
+                    <h3>Data Management</h3>
+                    <button class="btn btn-secondary" id="exportBtn">📤 Backup Data</button>
+                    <label class="btn btn-secondary import-label">
+                       📥 Import Data
+                        <input type="file" id="importBtn" accept=".json" hidden>
+                    </label>
+                    <button class="btn btn-danger" id="clearBtn">🗑️ Clear All Data</button>
+                </div>
+
+                <div class="form-group encrypt-option">
+                    <label>
+                        <input type="checkbox" id="encryptBackup">
+                        Encrypt backup with password
+                    </label>
+                    <input type="password" id="encryptPassword" placeholder="Password" class="hidden">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Audio Elements -->
+    <audio id="chimeSound" src="assets/soft-chime.mp3" preload="auto"></audio>
+    <audio id="crunchSound" src="assets/hurtful-crunch.mp3" preload="auto"></audio>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/dexie@3.2.4/dist/dexie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.2.0/crypto-js.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
